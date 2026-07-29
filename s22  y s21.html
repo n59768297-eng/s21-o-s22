@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Alcancía - Selector de Dispositivo</title>
+    
+    <!-- Ícono configurado con tu archivo -->
+    <link id="pageIcon" rel="icon" href="images-_3_.ico" type="image/x-icon">
+
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --danger: #e74c3c;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e272e, #2f3640);
+            color: var(--dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .model-selector {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .model-selector select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            font-size: 15px;
+            font-weight: bold;
+            background: #f8f9fa;
+        }
+        .header-img-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .header-img-container img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            background: #f8f9fa;
+            padding: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        h2 {
+            text-align: center;
+            color: var(--dark);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .meta-edit-box {
+            background: var(--light);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .meta-edit-box input {
+            width: 120px;
+            padding: 6px;
+            font-size: 14px;
+            text-align: right;
+            border-radius: 6px;
+            border: 1px solid #bdc3c7;
+        }
+        .progress-box {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
+            height: 22px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            transition: width 0.4s ease;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            font-size: 16px;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #27ae60;
+        }
+        .history-title {
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 0;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #fafbfc;
+            border-bottom: 1px solid var(--light);
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Selector de modelo -->
+    <div class="model-selector">
+        <select id="deviceSelect" onchange="changeDevice()">
+            <option value="s21">📱 Samsung S21 Ultra</option>
+            <option value="s22">📱 Samsung S22 Ultra</option>
+        </select>
+    </div>
+
+    <div class="header-img-container">
+        <img id="deviceImg" src="images-_3_.ico" alt="Celular Meta">
+    </div>
+    
+    <h2 id="deviceTitle">📱 Meta S21 Ultra</h2>
+
+    <!-- Modificar la meta si encuentras uno más barato -->
+    <div class="meta-edit-box">
+        <span>Meta Total ($):</span>
+        <input type="number" id="metaInput" step="any" onchange="updateMeta()" value="15808.97">
+    </div>
+    
+    <div class="progress-box">
+        <span id="percentage" style="font-weight: bold; color: var(--dark);">0% Completado</span>
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div class="stats">
+            <span>Ahorrado: $<span id="totalAhorrado">0.00</span></span>
+            <span>Falta: $<span id="totalFalta">0.00</span></span>
+        </div>
+    </div>
+
+    <form id="entryForm">
+        <input type="text" id="descInput" placeholder="Descripción (Ej: Semana 1, Venta...)" required>
+        <input type="number" id="amountInput" placeholder="Monto en pesos ($)" step="any" required>
+        <button type="submit">Agregar Dinero</button>
+    </form>
+
+    <h3 class="history-title">Historial de aportes</h3>
+    <ul id="historyList"></ul>
+</div>
+
+<script>
+    const devices = {
+        s21: {
+            name: "S21 Ultra",
+            defaultMeta: 15808.97,
+            img: "images-_3_.ico"
+        },
+        s22: {
+            name: "S22 Ultra",
+            defaultMeta: 19479.55,
+            img: "images-_3_.ico"
+        }
+    };
+
+    let currentDevice = localStorage.getItem('selected_device') || 's21';
+    let META_TOTAL = parseFloat(localStorage.getItem('meta_total_' + currentDevice)) || devices[currentDevice].defaultMeta;
+    let entries = JSON.parse(localStorage.getItem('entries_' + currentDevice)) || [];
+
+    const deviceSelect = document.getElementById('deviceSelect');
+    const deviceImg = document.getElementById('deviceImg');
+    const deviceTitle = document.getElementById('deviceTitle');
+    const metaInput = document.getElementById('metaInput');
+    const form = document.getElementById('entryForm');
+    const descInput = document.getElementById('descInput');
+    const amountInput = document.getElementById('amountInput');
+    const totalAhorradoSpan = document.getElementById('totalAhorrado');
+    const totalFaltaSpan = document.getElementById('totalFalta');
+    const progressBar = document.getElementById('progressBar');
+    const percentageSpan = document.getElementById('percentage');
+    const historyList = document.getElementById('historyList');
+
+    deviceSelect.value = currentDevice;
+    metaInput.value = META_TOTAL;
+
+    function updateUI() {
+        historyList.innerHTML = '';
+        let total = 0;
+
+        entries.forEach((entry, index) => {
+            total += entry.amount;
+
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span><strong>${entry.desc}</strong>: $${entry.amount.toFixed(2)}</span>
+                <button class="delete-btn" onclick="deleteEntry(${index})">X</button>
+            `;
+            historyList.appendChild(li);
+        });
+
+        let falta = META_TOTAL - total;
+        if (falta < 0) falta = 0;
+
+        let porcentaje = (META_TOTAL > 0) ? (total / META_TOTAL) * 100 : 0;
+        if (porcentaje > 100) porcentaje = 100;
+
+        totalAhorradoSpan.textContent = total.toFixed(2);
+        totalFaltaSpan.textContent = falta.toFixed(2);
+        progressBar.style.width = porcentaje + '%';
+        percentageSpan.textContent = porcentaje.toFixed(1) + '% Completado';
+
+        localStorage.setItem('entries_' + currentDevice, JSON.stringify(entries));
+        localStorage.setItem('meta_total_' + currentDevice, META_TOTAL);
+        localStorage.setItem('selected_device', currentDevice);
+    }
+
+    function changeDevice() {
+        currentDevice = deviceSelect.value;
+        META_TOTAL = parseFloat(localStorage.getItem('meta_total_' + currentDevice)) || devices[currentDevice].defaultMeta;
+        entries = JSON.parse(localStorage.getItem('entries_' + currentDevice)) || [];
+        
+        metaInput.value = META_TOTAL;
+        actualizarInfoVisual();
+        updateUI();
+    }
+
+    function actualizarInfoVisual() {
+        const info = devices[currentDevice];
+        deviceImg.src = info.img;
+        deviceTitle.textContent = `📱 Meta ${info.name}`;
+    }
+
+    function updateMeta() {
+        let newVal = parseFloat(metaInput.value);
+        if (newVal > 0) {
+            META_TOTAL = newVal;
+            updateUI();
+        }
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const desc = descInput.value;
+        const amount = parseFloat(amountInput.value);
+
+        if (amount > 0) {
+            entries.push({ desc, amount });
+            descInput.value = '';
+            amountInput.value = '';
+            updateUI();
+        }
+    });
+
+    function deleteEntry(index) {
+        entries.splice(index, 1);
+        updateUI();
+    }
+
+    actualizarInfoVisual();
+    updateUI();
+</script>
+
+</body>
+</html>
